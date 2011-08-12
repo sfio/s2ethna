@@ -1,42 +1,42 @@
-# PHP_INI_SYSTEM        php.ini または httpd.conf で設定可能なエントリ
-
-#expose_php             Off     # *php.ini only
-#safe_mode              Off
-#safe_mode_gid          Off
-#file_uploads           Off
-#allow_url_fopen        Off
+## PHP_INI_SYSTEM        php.ini または httpd.conf で設定可能なエントリ
 #
-#extension=php_mbstring.dll
-#extension=php_mysql.dll
-#extension=php_pdo.dll
-#extension=php_pdo_mysql.dll
-
-# PHP_INI_PERDIR        php.ini, .htaccess または httpd.confで設定可能なエントリ
-
-php_flag allow_call_time_pass_reference Off
-php_flag register_globals               Off
-php_flag register_long_arrays           Off
-php_flag register_argc_argv             Off
-php_flag magic_quotes_gpc               Off
-php_value mbstring.language             "Japanese"
-
-# PHP_INI_ALL           どこでも設定可能なエントリ
-
-# error_reportingは定数使えない。E_ALL | E_STRICT
-#php_value error_reporting              4095
-# error_reportingは定数使えない。E_ALL
-php_value error_reporting               2047
-php_flag display_errors                 Off
-php_flag log_errors                     On
-php_value log_errors_max_len            4096
-php_value error_log                     "syslog"
-php_value variables_order               "GPCS"
-php_value default_mimetype              "text/html"
-php_value default_charset               "EUC-JP"
-# mbstring.internal_encodingはmbstring.languageの後に設定すること
-php_value mbstring.internal_encoding    "EUC-JP"
-php_flag session.use_only_cookies       On
-php_flag session.use_trans_sid          Off
-php_value session.gc_divisor            1000
-php_flag session.bug_compat_42          Off
-php_flag session.hash_function          1
+##expose_php             Off     # *php.ini only
+##safe_mode              Off
+##safe_mode_gid          Off
+##file_uploads           Off
+##allow_url_fopen        Off
+##
+##extension=php_mbstring.dll
+##extension=php_mysql.dll
+##extension=php_pdo.dll
+##extension=php_pdo_mysql.dll
+#
+## PHP_INI_PERDIR        php.ini, .htaccess または httpd.confで設定可能なエントリ
+#
+#php_flag allow_call_time_pass_reference Off
+#php_flag register_globals               Off
+#php_flag register_long_arrays           Off
+#php_flag register_argc_argv             Off
+#php_flag magic_quotes_gpc               Off
+#php_value mbstring.language             "Japanese"
+#
+## PHP_INI_ALL           どこでも設定可能なエントリ
+#
+## error_reportingは定数使えない。E_ALL | E_STRICT
+##php_value error_reporting              4095
+## error_reportingは定数使えない。E_ALL
+#php_value error_reporting               2047
+#php_flag display_errors                 Off
+#php_flag log_errors                     On
+#php_value log_errors_max_len            4096
+#php_value error_log                     "syslog"
+#php_value variables_order               "GPCS"
+#php_value default_mimetype              "text/html"
+#php_value default_charset               "EUC-JP"
+## mbstring.internal_encodingはmbstring.languageの後に設定すること
+#php_value mbstring.internal_encoding    "EUC-JP"
+#php_flag session.use_only_cookies       On
+#php_flag session.use_trans_sid          Off
+#php_value session.gc_divisor            1000
+#php_flag session.bug_compat_42          Off
+#php_flag session.hash_function          1

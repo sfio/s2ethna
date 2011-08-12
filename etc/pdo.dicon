@@ -4,9 +4,9 @@
 <components namespace="pdo">
 
     <component name="dataSource" class="S2Ethna_PDODataSource">
-        <property name="dsn">"mysql:host=localhost; dbname=s2con"</property>
-        <property name="user">"root"</property>
-        <property name="password">"pass"</property>
+        <property name="dsn">"mysql:host=FLX_DB_HOST; dbname=FLX_DB_NAME"</property>
+        <property name="user">"FLX_DB_USER"</property>
+        <property name="password">"FLX_DB_PASS"</property>
         <property name="option">
             array(PDO::ATTR_ORACLE_NULLS => PDO::NULL_EMPTY_STRING,
                   PDO::ATTR_AUTOCOMMIT => false);
