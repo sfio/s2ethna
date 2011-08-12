@@ -1,0 +1,265 @@
+========================================================================
+【ソフト名】 S2Ethna - S2Container.PHP5 and S2Dao.PHP5 for Ethna
+【 種  別 】 フリーソフトウェア(修正BSDライセンス適用)
+【登 録 名】 s2eth_021.zip
+【 版  数 】 version 0.21
+【公 開 日】 200x.xx.xx
+【著作権者】 sfio at sakura dot ai dot to
+【動作環境】 Ethna、S2Container.PHP5が動作する環境
+【動作確認】 Apache 2.2.x,MySQL 5.0.x,PHP 5.2.xにて確認
+【転載条件】 修正BSDライセンスに従い転載可能
+【連 絡 先】 http://s2ethna.ameria.jp/
+========================================================================
+
+■はじめに
+
+  S2Ethna は、Ethna で S2Container.PHP5 と S2Dao.PHP5 を使えるようにする
+  ライブラリです。あなたのプロジェクトは、DI+AOP コンテナ、O/R マッピング
+  という強力なツールを手に入れることになります。
+
+  以下のページを参考に、現行バージョンの Ethna で使用できるようにしました。
+
+  Ethna and S2Container - klove
+  http://cgi39.plala.or.jp/klove/w/k.cgi?page=Ethna+and+S2Container
+
+  公開を快く許可してくださった klove 氏に感謝します。
+
+■関連URL
+
+  Ethna
+  http://ethna.jp/
+
+  S2Container.PHP5
+  http://s2container.php5.seasar.org/
+
+  S2Dao.PHP5
+  http://s2dao.php5.seasar.org/
+
+■動作環境
+
+  S2Container.PHP5 を使用するため、PHP5 未満では使用できません。
+
+  以下のライブラリが必須です。
+
+  ・Ethna(v2.3.2推奨)
+    ・PEAR
+    ・Smarty
+  ・S2Container.PHP5(v1.1.3推奨、v1.2.0RC1可)
+
+  S2Dao.PHP5 を使用する場合には、以下のライブラリが必要です。
+
+  ・S2Dao.PHP5(v1.1.2推奨、v1.2.0beta1不可)
+  ・PDO
+
+  データベースインポートツールを使用する場合には、以下のライブラリが必要
+  です。
+
+  ・PEAR::DB
+
+■動作確認済み環境
+
+  ・Windows XP SP2, Apache v2.2.6, MySQL v5.0.45, PHP v5.2.4
+  ・Debian GNU/Linux 4.0(amd64), Apache v2.2.3, MySQL v5.0.45, PHP v5.2.4
+  ・Debian GNU/Linux 4.0(ppc), Apache v2.2.3, MySQL v5.0.32, PHP v5.2.0
+
+  ・PEAR v1.6.2
+  ・PEAR::DB v1.7.13
+  ・Smarty v2.6.18
+  ・Ethna v2.3.2
+  ・S2Container.PHP5 v1.2.0RC1
+  ・S2Dao.PHP5 v1.1.2
+
+■構成
+
+ PROJECT
+ │
+ ├─app
+ │  │  (PROJECTID)_Controller.php
+ │  │  (PROJECTID)_ActionForm.php
+ │  │
+ │  └─dao
+ │          (TABLE1)Bean.class.php
+ │          (TABLE1)Dao.class.php
+ │          (TABLE2)Bean.class.php
+ │          (TABLE2)Dao.class.php
+ │          ...
+ │
+ ├─etc
+ │      dao.dicon
+ │      pdo.dicon
+ │
+ └─lib
+     └─S2Ethna
+             S2Ethna.php
+             S2Ethna_Backend.class.php
+             S2Ethna_BaseBean.class.php
+             S2Ethna_ClassFactory.class.php
+             S2Ethna_Exception.class.php
+             S2Ethna_Logger.class.php
+             S2Ethna_PagerCondition.class.php
+             S2Ethna_PDODataSource.class.php
+             S2Ethna_Session.class.dicon
+             S2Ethna_Session.class.php
+             (ActionForm.diff)
+             (Controller1.diff)
+             (Controller2.diff)
+             (Controller3.diff)
+
+■導入方法(新規)
+
+  Ethna や S2Container.PHP5、S2Dao.PHP5 については、それぞれのウェブサイト
+  や書籍をご覧ください。
+  ここでは、Ethna で作成したプロジェクトに、S2Ethna を組み込んで、
+  S2Container.PHP5、S2Dao.PHP5 を使用できるようにする方法を解説します。
+
+・app/(PROJECTID)_Controller.php
+
+    プロジェクト固有のコントローラで、３つの作業を行います。
+
+    アプリケーションライブラリのインクルードの後に、
+    lib/S2Ethna/Controller1.diff を差し込んでください。
+    define(S2Container.PHP5/S2Dao.PHP5 の設定項目)は、必要に応じて変更して
+    ください。
+
+    コントローラのクラス定義の'class'、'backend'、'logger'を、
+    lib/S2Ethna/Controller2.diff を参考に変更してください。
+    S2Ethna_Session を使用する場合、'session'も変更してください。
+
+    PROJECTID_Controller クラスの最後に、
+    lib/S2Ethna/Controller3.diff を差し込んでください。
+
+・app/(PROJECTID)_ActionForm.php
+
+    プロジェクト固有のアクションフォームで、１つだけ作業を行います。
+    クラスにlib/S2Ethna/ActionForm.diff を差し込んでください。
+    S2Dao.PHP5 を使用しない場合は、この作業は必要ありません。
+
+・etc/pdo.dicon
+・etc/dao.dicon
+
+    コピーして、環境に合わせて書き換えてください。
+    S2Dao.PHP5を使用しない場合は、この作業は必要ありません。
+
+・lib/S2Ethna/S2Ethna_Backend.class.php
+・lib/S2Ethna/S2Ethna_BaseBean.class.php
+・lib/S2Ethna/S2Ethna_ClassFactory.class.php
+・lib/S2Ethna/S2Ethna_Exception.class.php
+・lib/S2Ethna/S2Ethna_Logger.class.php
+・lib/S2Ethna/S2Ethna_PagerCondition.class.php
+・lib/S2Ethna/S2Ethna_PDODataSource.class.php
+・lib/S2Ethna/S2Ethna_Session.class.dicon
+・lib/S2Ethna/S2Ethna_Session.class.php
+
+    そのまま lib 配下の S2Ethna ディレクトリにコピーしてください。
+
+■導入方法(更新)
+
+  古いバージョンを導入済みのプロジェクトに、v0.2xを導入するには、
+  以下のようにしてください。
+  v0.2を導入済みのプロジェクトは、lib/S2Ethna/* のみ行ってください。
+
+・app/(PROJECTID)_Controller.php
+・app/(PROJECTID)_ActionForm.php
+
+    旧バージョンで差し込んだ部分を削除、変更した部分を戻し、
+    新規と同じ方法で導入してください。
+
+・etc/pdo.dicon
+
+    S2Ethna_PDODataSource を使う場合のみ、
+    pdo.dicon の S2Container_PDODataSource を S2Ethna_PDODataSource に
+    変更してください。
+
+・etc/dao.dicon
+
+    変更の必要はありません。
+
+・lib/S2Ethna/*
+
+    旧バージョンのファイルは削除して、新規と同じ方法で導入してください。
+
+・app/dao/*Bean.class.php
+
+    Beanクラスの定義に「extends S2Ethna_BaseBean」を付加してください。
+
+・app/dao/*Dao.class.php
+
+    変更の必要はありません。
+
+■使用方法
+
+  S2Container.PHP5、S2Dao.PHP5 の使い方は、それぞれのウェブサイトや書籍を
+  ご覧ください。
+
+  S2Ethna の特徴である ActionClass や AppManager に対しての自動インジェク
+  ションは、対象となる ActionClass や AppManager の PHP ファイルと同じディ
+  レクトリに、同名で拡張子が dicon の dicon ファイルを用意してください。
+  (action/a.php なら、action/a.dicon というファイルを用意。)
+  オブジェクトの生成時に、S2Container.PHP5 が dicon ファイルを参照して DI
+  や AOP をしてくれます。
+
+  S2Dao.PHP5 を使用する場合は、app/dao 配下に Bean と DAO を置いてください。
+
+■解説
+
+・app/(PROJECTID)_Controller.php
+
+    S2Container.PHP5 と S2Dao.PHP5 の組み込み、および捕まえ損ねた例外を
+    捕獲する機能を追加しています。
+
+・app/(PROJECTID)_ActionForm.php
+
+    ActionForm に set()、または setApp() された値で、
+    S2Ethna_BaseBean や S2Dao_ArrayList の派生オブジェクトのように
+    toArray() メソッドを持つオブジェクトを Array に変換して、レンダリング
+    エンジンに渡す機能を追加しています。
+    オブジェクトのままレンダリングエンジンに渡したい場合は、setAppNE() を
+    使用してください。
+
+・lib/S2Ethna/S2Ethna_Backend.class.php
+
+    バックエンド処理クラスです。Ethna_Backend クラスを継承しています。
+    ActionClass に対して、自動インジェクション可能にします。
+
+・lib/S2Ethna/S2Ethna_ClassFactory.class.php
+
+    オブジェクト生成ゲートウェイです。Ethna_ClassFactory クラスを継承して
+    います。
+    AppManager に対して、自動インジェクション可能にします。
+
+・lib/S2Ethna/S2Ethna_Logger.class.php
+
+    S2Container.PHP5 や S2Dao.PHP5 のログを Ethna で管理します。
+    log4php のインターフェースを真似しているので、本物の log4php とは同居
+    できません。
+    (S2Ethna の log4php クラスを削除することで同居は可能になりますが、
+    Ethna のログと別に管理されてしまうのでお勧めしません。)
+
+・lib/S2Ethna/S2Ethna_BaseBean.class.php
+
+    Bean の基底クラスです。
+    使うと Ethna での Bean の取り扱いが少し楽になるはずです。
+
+・lib/S2Ethna/S2Ethna_Exception.class.php
+
+    例外クラスです。Ethna_Error クラスをラッピングしています。
+    使うと Ethna での例外の取り扱いが少し楽になるはずです。
+
+・lib/S2Ethna/S2Ethna_PagerCondition.class.php
+
+    ページャクラスです。
+    オフセットではなく、ページ主体で扱う場合に便利かもしれません。
+
+・lib/S2Ethna/S2Ethna_PDODataSource.class.php
+
+    データソースクラスです。
+    １つの DSN に対して１つの PDO オブジェクトを生成するようになります。
+    (通常は インスタンスごとにPDOオブジェクトを生成します。)
+    使うと Ethna でのトランザクションの取り扱いが少し楽になるはずです。
+
+・lib/S2Ethna/S2Ethna_Session.class.dicon
+・lib/S2Ethna/S2Ethna_Session.class.php
+
+    セッション管理クラスです。Ethna_Session クラスを継承しています。
+    使うと複数サーバによる簡単な負荷分散が可能になります。
+

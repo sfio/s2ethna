@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container//EN" "http://www.seasar.org/dtd/components21.dtd">
+<components>
+
+	<include path="%BASE%/etc/dao.dicon"/>
+
+    <component name="S2Ethna_Session" class="S2Ethna_SessionImpl">
+	    <aspect>pdo.requiresNewTx</aspect>
+    </component>
+
+    <component class="S2Ethna_SessionDao">
+        <aspect>dao.interceptor</aspect>
+    </component>
+
+</components>

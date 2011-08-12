@@ -1,0 +1,31 @@
+■■■■■■■■
+■更新履歴
+■■■■■■■■
+
+200x/xx/xx v0.21
+  S2Ethna: entityディレクトリを追加
+  S2Ethna: ハードタブをスペースへ変更(thx halt.)
+  S2Ethna: 誤字修正(thx halt., cos31.)
+
+2007/10/29 v0.2
+  S2Ethna: Controlerへの組み込みを簡素化
+  S2Ethna: ファイル名の命名規則を統一
+  S2Ethna: S2Ethna_BaseBeanを追加
+  S2Ethna: S2Ethna_Exceptionを追加
+  S2Ethna: S2Ethna_PagerConditionを追加
+  S2Ethna: S2Ethna_PDODataSourceを追加
+  S2Ethna: S2Ethna_Sessionを追加
+  S2Ethna: S2Container.PHP5 v1.2系に対応
+  S2Ethna: BEANのArray化にget_object_varsではなくtoArrayメソッドを使用するように変更
+  S2Ethna: 補足しきれない例外を補足してログに記録するようにした
+  S2Ethna: session_*.sql追加
+  Project: 全トップディレクトリに.htaccess追加
+  Project: www版ドキュメントの整備
+  Project: phpdoc追加
+  Example: サンプルを更新
+  Example: example_*.sql追加
+  Utility: データベースインポートツールcli版削除/www版追加
+  Utility: データベースインポートツールで生成されるソースコードをテンプレート化
+
+2007/03/12 v0.1
+  初版公開。

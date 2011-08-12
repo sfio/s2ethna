@@ -1,0 +1,25 @@
+// S2Ethna
+require_once('S2Ethna/S2Ethna.php');
+
+/** DICON XML format DTD validation */
+define('S2CONTAINER_PHP5_DOM_VALIDATE', true);
+
+/** S2Container_SingletonS2ContainerFactory uses if defined */
+//define('S2CONTAINER_PHP5_APP_DICON', '');
+
+/** S2Container.PHP5 Log Level */
+//define('S2CONTAINER_PHP5_LOG_LEVEL',S2Container_SimpleLogger::WARN);
+define('S2CONTAINER_PHP5_LOG_LEVEL',S2Container_SimpleLogger::DEBUG);
+
+/** Logging eval script as debug log */
+//define('S2CONTAINER_PHP5_DEBUG_EVAL', false);
+
+/** constant or comment annotation available */
+define('S2CONTAINER_PHP5_ANNOTATION_HANDLER', 'S2Container_ConstantAnnotationHandler');
+
+/** append suffix to dicon file */
+//define('S2CONTAINER_PHP5_ENV', '');
+
+/** constant or comment annotation usage */
+//define('S2DAO_PHP5_USE_COMMENT', false);
+S2Container_AnnotationContainer::$DEFAULT_ANNOTATION_READER = 'S2DaoAnnotationReader';

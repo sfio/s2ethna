@@ -1,0 +1,25 @@
+    /**
+     * @var array クラス定義
+     */
+    var $class = array(
+        /*
+         * TODO: 設定クラス、ログクラス、SQLクラスをオーバーライド
+         * した場合は下記のクラス名を忘れずに変更してください
+         */
+        'class'         => 'S2Ethna_ClassFactory', // S2Ethna対応
+        'backend'       => 'S2Ethna_Backend', // S2Ethna対応
+        'config'        => 'Ethna_Config',
+        'db'            => 'Ethna_DB_PEAR',
+        'error'         => 'Ethna_ActionError',
+        'form'          => 'S2ethna_ActionForm',
+        'i18n'          => 'Ethna_I18N',
+        'logger'        => 'S2Ethna_Logger', // S2Ethna対応
+        'plugin'        => 'Ethna_Plugin',
+        'session'       => 'Ethna_Session',
+        // S2Ethna_Sessionを使用する場合、上の行を削除し、下の行のコメントアウトを解除する
+        //'session'       => 'S2Ethna_SessionProxy', // S2Ethna対応
+        'sql'           => 'Ethna_AppSQL',
+        'view'          => 'S2ethna_ViewClass',
+        'renderer'      => 'Ethna_Renderer_Smarty',
+        'url_handler'   => 'S2ethna_UrlHandler',
+    );

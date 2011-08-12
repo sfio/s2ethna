@@ -1,0 +1,18 @@
+    /**
+     * 補足しきれない例外を補足してログに記録する
+     *
+     * @access public
+     * @param mixed $default_action_name 指定のアクション名
+     * @param mixed $fallback_action_name アクション名が決定できなかった場合に実行されるアクション名
+     * @param bool $enable_filter フィルタチェインを有効にするかどうか
+     * @return mixed 0:正常終了 Ethna_Error:エラー
+     */
+    function trigger($default_action_name = "", $fallback_action_name = "", $enable_filter = true)
+    {
+        try {
+            $r = parent::trigger($default_action_name, $fallback_action_name, $enable_filter);
+        } catch (Exception $e) {
+            $this->logger->log(LOG_CRIT, 'Caught exception \'' . get_class($e) . '\' with message \'' . $e->getMessage() . '\' in ' . __METHOD__);
+        }
+        return $r;
+    }

@@ -1,0 +1,17 @@
+■■■■■■■■
+■TODO
+■■■■■■■■
+
+[High]
+・S2Ethna_BaseBeanの解説
+・S2Ethna_PagerConditionの解説
+・複数DB(DSN)の使い方
+・S2Ethna_BaseBeanのtoArray()を、thisじゃなくてRefrectionで取得するように変更する
+・S2Dao.PHP5 v1.2系に対応する
+
+[Middle]
+・データベースインポートツールで、生成するDAOを細かく指定できるようにする
+・UnitTest
+
+[Low]
+・セッションのように、ログもDB化
