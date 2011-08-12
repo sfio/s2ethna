@@ -22,10 +22,10 @@
 /**
  * go-pear is the online PEAR installer: just download it and run it
  * (through a browser or command line), it will set up a minimal PEAR
- * installation that will be ready for immediatel use.
+ * installation that will be ready for immediate use.
  *
  * @license    http://www.php.net/license/2_02.txt  PHP License 2.02
- * @version    CVS: $Id: go-pear,v 1.114 2008/02/01 23:03:35 tias Exp $
+ * @version    CVS: $Id: go-pear 309077 2011-03-10 18:36:20Z dufuz $
  * @link       http://pear.php.net/package/pearweb_gopear
  * @author     Tomas V.V.Cox <cox@idecnet.com>
  * @author     Stig Bakken <ssb@php.net>
@@ -53,7 +53,7 @@ ini_set('magic_quotes_runtime', false);
 error_reporting( E_ALL & ~E_NOTICE);
 
 define('WINDOWS', (substr(PHP_OS, 0, 3) == 'WIN'));
-define('GO_PEAR_VER', '1.1.1');
+define('GO_PEAR_VER', '1.1.6');
 
 define('WIN32GUI', !WEBINSTALLER && WINDOWS && $sapi_name=='cli' && which('cscript'));
 
@@ -87,27 +87,35 @@ if (WEBINSTALLER && isset($_GET['action']) && $_GET['action'] == 'img' && isset(
 }
 
 // Check if PHP version is sufficient
-if (function_exists("version_compare") && version_compare(phpversion(), "4.3.0",'<')) {
+$phpVersion = phpversion();
+if (function_exists("version_compare") && version_compare($phpVersion, "4.4",'<')) {
     die("Sorry!  Your PHP version is too old.  PEAR and this script requires at
-least PHP 4.3.0 for stable operation.
+least PHP 4.4.0 for stable operation.
 
 It may be that you have a newer version of PHP installed in your web
 server, but an older version installed as the 'php' command.  In this
 case, you need to rebuilt PHP from source.
-If your source is 4.3.x or newer, just make sure you don't run
+If your source is 4.4.x or newer, just make sure you don't run
 'configure' with --disable-cli, rebuilt and copy sapi/cli/php.
 
 Please upgrade PHP to a newer version, and try again.  See you then.
 
+");
+} elseif (!WEBINSTALLER && function_exists("version_compare") && version_compare($phpVersion, "5.1.6",'>=')) {
+    die("Sorry!  Your PHP version is too new ($phpVersion) for this go-pear.
+Instead use http://pear.php.net/go-pear.phar for a more stable and current
+version of go-pear, more suited to your PHP version.
+
+Thank you for your coopertion and sorry for the inconvenience!
 ");
 }
 
 $gopear_bundle_dir = dirname(__FILE__).'/go-pear-bundle';
 
 $bootstrap_files = array(
-    'PEAR.php'             => 'http://cvs.php.net/viewcvs.cgi/pear-core/PEAR.php?view=co&pathrev=PEAR_1_4',
-    'Archive/Tar.php'      => 'http://cvs.php.net/viewcvs.cgi/pear/Archive_Tar/Archive/Tar.php?view=co&pathrev=RELEASE_1_3_2',
-    'Console/Getopt.php'   => 'http://cvs.php.net/viewcvs.cgi/pear-core/Console/Getopt.php?view=co&pathrev=PEAR_1_4',
+    'PEAR.php'             => 'http://svn.php.net/viewvc/pear/pear-core/branches/PEAR_1_4/PEAR.php?view=co',
+    'Archive/Tar.php'      => 'http://svn.php.net/viewvc/pear/packages/Archive_Tar/tags/Archive_Tar-1.3.7/Archive/Tar.php?view=co',
+    'Console/Getopt.php'   => 'http://svn.php.net/viewvc/pear/pear-core/branches/PEAR_1_4/Console/Getopt.php?view=co',
     );
 
 $bootstrap_pkgs = array( // uses URL like http://pear.php.net/get/%s
@@ -125,6 +133,7 @@ $installer_packages = array(
 $pfc_packages = array(
     'PEAR_Frontend_Web-beta' => 'Webbased PEAR Installer',
     'PEAR_Frontend_Gtk2' => 'Graphical PEAR installer based on PHP-Gtk2',
+    'MDB2' => 'database abstraction layer.',
     // ethna
     'DB' => 'Database Abstraction Layer.',
 );
@@ -763,6 +772,7 @@ foreach ($config_vars as $var) {
 }
 $config->set('download_dir', $temp_dir . '/download');
 $config->set('temp_dir', $temp_dir);
+$config->set('http_proxy', $http_proxy);
 $config->store();
 
 $registry = new PEAR_Registry($php_dir);
@@ -1259,10 +1269,11 @@ function temp_dir($default=false)
         /* try it really, is_writable is buggy with openbasedir */
         $fh = @fopen(realpath($default) . "/test","wb");
         if ($fh) {
-            $ptmp = $default;
+            // desparately try to set temp dir any possible way, see bug #13167
+            $ptmp = $_temp = $temp_dir = $default;
+            putenv('TMPDIR='.$default);
             return true;
         } else {
-            $ptmp = "failed";
             return false;
         }
     }
@@ -1310,7 +1321,7 @@ function temp_dir($default=false)
     // If for some reason the user has no rights to access to
     // the standard tempdir, we assume that he has the right
     // to access his prefix and choose $prefix/tmp as tempdir
-    if (!$_temp) {
+    if (!$_temp || !is_writable($_temp)) {
         print "System's Tempdir failed, trying to use \$prefix/tmp ...";
         $res = mkdir_p($prefix.'/tmp');
         if (!$res) {
@@ -1728,7 +1739,7 @@ function displayHTML($page = 'Welcome', $data = array())
         }
 
         foreach ($menus as $menu => $descr) {
-            print('<img src="'.basename(__FILE__).'?action=img&amp;img=smallpear" border="0">');
+            print('<img src="'.basename(__FILE__).'?action=img&amp;img=smallpear" alt="" />');
 
             if (!$after_current) {
                 $class = '';
@@ -1799,7 +1810,18 @@ function displayHTML($page = 'Welcome', $data = array())
 <?php
     } elseif ($page == 'config') {
         if (!empty($GLOBALS['http_proxy'])) {
-            list($proxy_host, $proxy_port) = explode(':', $GLOBALS['http_proxy']);
+            $tmp_proxy = parse_url($GLOBALS['http_proxy']);
+
+            $proxy_host = $tmp_proxy['scheme'] . '://';
+            if ($tmp_proxy['user'] != '') {
+                $proxy_host .= $tmp_proxy['user'];
+                if ($tmp_proxy['pass'] != '') {
+                    $proxy_host .= ':' . $tmp_proxy['pass'];
+                }
+                $proxy_host .= '@';
+            }
+            $proxy_host .= $tmp_proxy['host'];
+            $proxy_port = $tmp_proxy['port'];
         } else {
             $proxy_host = $proxy_port = '';
         }
@@ -1807,11 +1829,11 @@ function displayHTML($page = 'Welcome', $data = array())
             <form action="<?php echo basename(__FILE__);?>?step=install" method="post">
         <!-- Packages stuff -->
         <span class="title">Packages</span>
-        <p>
+	    <p>
         The following PEAR packages will be installed. You can select some optional<br />
         packages to be installed by go-pear too:<br />
         </p>
-        <table border="0">
+	    <table border="0">
         <tr>
         <th>&nbsp;</th><th>Package</th><th width="65%">Description</th>
         </tr><tr>
@@ -1839,15 +1861,15 @@ function displayHTML($page = 'Welcome', $data = array())
 
         <!-- Configuration stuff -->
         <span class="title">Configuration</span>
-        <p>
+	    <p>
             Below is a suggested file layout for your new PEAR installation.
         </p>
 
         <!--
-        <p>
-        <table border="0">
+	    <p>
+	    <table border="0">
               <tr>
-                <td valign="top"><img src="<?php echo basename(__FILE__); ?>?action=img&amp;img=note" border="0"></td>
+                <td valign="top"><img src="<?php echo basename(__FILE__); ?>?action=img&amp;img=note" /></td>
                 <td>
                   <span class="green">
                     <b>Note:</b> Make sure that PHP has the permission to access the specified<br/>
@@ -1856,7 +1878,7 @@ function displayHTML($page = 'Welcome', $data = array())
                 </td>
               </tr>
             </table>
-        </p>
+	    </p>
         -->
 
             <table border="0" width="80%">
@@ -1893,10 +1915,10 @@ function displayHTML($page = 'Welcome', $data = array())
         }
 ?>
             </table>
-        </p>
-        <hr />
+	    </p>
+	    <hr />
 
-        <!-- Optional stuff -->
+	    <!-- Optional stuff -->
         <span class="title">Optional:</span>
 
         <ul>
@@ -1905,7 +1927,7 @@ function displayHTML($page = 'Welcome', $data = array())
             <input type="text" name="proxy[host]" value="<?php echo $proxy_host;?>"> : <input type="text" name="proxy[port]" value="<?php echo $proxy_port;?>" size="6">
             </p>
 
-            <p>
+	        <p>
             <li />Compatibility-Mode for old non-DOM Browsers <input type="checkbox" name="BCmode" id="BCmode" checked>
             <script type="text/javascript">
             <!--
@@ -1914,16 +1936,16 @@ function displayHTML($page = 'Welcome', $data = array())
                 };
             // -->
             </script>
-            </p>
+	        </p>
         </ul>
 
 <?php
         if (WINDOWS && phpversion() == '4.1.1') {
 ?>
-            <p>
+		    <p>
                     <table border="0">
                       <tr>
-                        <td valign="top"><img src="<?php echo basename(__FILE__); ?>?action=img&amp;img=note" border="0"></td>
+                        <td valign="top"><img src="<?php echo basename(__FILE__); ?>?action=img&amp;img=note" alt="" /></td>
                         <td>
                           <span style="color: #ff0000">
                               <b>Warning:</b> Your PHP version (4.1.1) might be imcompatible with go-pear due to a bug<br/>
@@ -1932,16 +1954,16 @@ function displayHTML($page = 'Welcome', $data = array())
                         </td>
                       </tr>
                     </table>
-            </p>
+		    </p>
 <?php
         }
 ?>
         <hr />
-        <!-- Closing note -->
-        <p>
+	    <!-- Closing note -->
+	    <p>
             <table border="0">
               <tr>
-                <td valign="top"><img src="<?php echo basename(__FILE__); ?>?action=img&amp;img=note" border="0"></td>
+                <td valign="top"><img src="<?php echo basename(__FILE__); ?>?action=img&amp;img=note" alt="" /></td>
                 <td>
                   <span class="green">
                       <b>Note:</b> Installation might take some time, because go-pear has to<br/>
@@ -1951,7 +1973,7 @@ function displayHTML($page = 'Welcome', $data = array())
                 </td>
               </tr>
             </table>
-        </p>
+	    </p>
 
             <input type="submit" value="Install" onClick="javascript: submitButton.value='Downloading and installing ... please wait ...'" name="submitButton">
             </form>
@@ -1967,7 +1989,7 @@ function displayHTML($page = 'Welcome', $data = array())
             <p>
             <span class="title">Installation in progress ...</span></br >
             <i>(If the page stops loading before the end of the installation, then just reload it)</i></p>
-            <script language="javascript">
+            <script type="text/javascript">
             <!--
 
                 var progress;
@@ -2088,7 +2110,7 @@ function displayHTML($page = 'Welcome', $data = array())
                     <td bgcolor="#ffffff" height="20" id="installation_progress" class="green">0 %</td>
                   </tr>
                 </table>
-                <br>
+                <br />
                 <table border="0">
                   <tr>
                     <td bgcolor="#cccccc" width="10" height="20" id="download_progress_cell_0">&nbsp;</td>
@@ -2107,7 +2129,7 @@ function displayHTML($page = 'Welcome', $data = array())
                     <td bgcolor="#ffffff" height="20" id="download_file" class="green"></td>
                   </tr>
                 </table>
-                <br>
+                <br />
                 <iframe src="<?php echo basename(__FILE__); ?>?step=install-progress&amp;<?php echo SID;?>" width="700" height="700" frameborder="0" marginheight="0" marginwidth="0"></iframe>
               </td>
             </tr>
@@ -2181,11 +2203,11 @@ function displayHTMLInstallationSummary($data = '')
 
             <table border="0">
               <tr>
-                <td valign="top"><img src="<?php echo basename(__FILE__); ?>?action=img&amp;img=note" border="0"></td>
+                <td valign="top"><img src="<?php echo basename(__FILE__); ?>?action=img&amp;img=note" alt="" /></td>
                 <td>
                   <span class="green">
                   <b>Note:</b> To use PEAR without any problems you need to add your<br/>
-                  PEAR Installation path (<?php echo $GLOBALS['php_dir']; ?>)<br>
+                  PEAR Installation path (<?php echo $GLOBALS['php_dir']; ?>)<br />
                   to your <a href="http://www.php.net/manual/en/configuration.directives.php#ini.include_path">include_path</a>.<br/>
                       <br/>
                   Using a .htaccess file or directly edit httpd.conf would be working solutions<br/>
@@ -2206,7 +2228,7 @@ function displayHTMLInstallationSummary($data = '')
 ?>
                     <table border="0">
                       <tr>
-                        <td valign="top"><img src="<?php echo basename(__FILE__); ?>?action=img&amp;img=note" border="0"></td>
+                        <td valign="top"><img src="<?php echo basename(__FILE__); ?>?action=img&amp;img=note" alt="" /></td>
                         <td>
                           <span style="color: #ff0000">
                             <b>Warning:</b> Can not determine the URL of the freshly installed Web Frontend<br />
@@ -2295,7 +2317,7 @@ function displayHTMLProgress($progress)
         };
         $msg[$key] = $value;
     };
-    $msg = implode('<br>', $msg);
+    $msg = implode('<br />', $msg);
 
     $msg.='<script type="text/javascript"> parent.setprogress('.((int) $progress).');  </script>';
 
@@ -2661,4 +2683,3 @@ php.ini <$pathIni> include_path updated.
 }
 
 ?>
-

@@ -1,0 +1,8 @@
+[replace]
+etc/pdo.dicon FLX_DB_NAME PROJECT_NAME
+etc/pdo.dicon FLX_DB_HOST DB_HOST
+etc/pdo.dicon FLX_DB_USER DB_USER
+etc/pdo.dicon FLX_DB_PASS DB_PASSWORD
+
+[setup]
+
