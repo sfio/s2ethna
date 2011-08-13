@@ -1,8 +1,67 @@
+[permission]
+#public_html/cache          777
+#public_html/secret.txt     666
+
+#Permissionディレクティブは、ファイルやディレクトリのパーミッションを変更します。
+#コマンドは「Gitリポジトリのルートからのパス」「スペースまたはタブ」「パーミッション」の順番で記述します。
+#上記の例ではpublic_html内のcacheディレクトリを777に、secret.txtを666に変更しています。
+
+.my.cnf       600
+etc/pdo.dicon 600
+
 [replace]
+#public_html/config.php      DUMMY_DB_USER               DB_USER
+#public_html/config.php      DUMMY_DB_PASSWORD       DB_PASSWORD
+
+#replaceディレクティブは、ファイル内のダミー文字列を、プロジェクト固有の設定値に置換します。
+#コマンドは「対象ファイルのGitリポジトリからのパス」「スペースまたはタブ」「ダミー文字列」
+# 「スペースまたはタブ」「環境固有変数」という順番で記述します。
+# 上記の例では、DUMMY_DB_USERという文字列をデータベースユーザ名に、
+# また、DUMMY_DB_PASSWORDという文字列をデータベースパスワードに置換します。
+# たとえばpublic_html/config.phpなどでは
+# $password = 'DUMMY_DB_PASSWORD';
+# と記述しておき、リプレースを通すことでDUMMY_DB_PASSWORDをプロジェクト固有のMySQLパスワードに
+# 置換することを想定しています。
+# こうすることで、同じGithubのリポジトリを別のプロジェクトでインポートした場合でも、
+# それぞれのプロジェクトの固有の環境にあわえて、設定内容を動的に変更できるようになります。
+# 利用可能な環境固有変数は下記のとおりです。
+#
+# DB_USER ... プロジェクトごとに発行されるデータベースのユーザ名です。多くの倍はプロジェクト名と同じものです。
+# DB_PASSWORD ... データベースのパスワードです。
+# DB_HOST ... データベースサーバのホスト名です。
+# PROJECT_NAME ... プロジェクト名です。
+
+.my.cnf FLX_DB_PASS DB_PASSWORD
+
 etc/pdo.dicon FLX_DB_NAME PROJECT_NAME
 etc/pdo.dicon FLX_DB_HOST DB_HOST
 etc/pdo.dicon FLX_DB_USER DB_USER
 etc/pdo.dicon FLX_DB_PASS DB_PASSWORD
 
-[setup]
+deploy.sh FLX_DB_NAME PROJECT_NAME
+deploy.sh FLX_DB_HOST DB_HOST
+deploy.sh FLX_DB_USER DB_USER
 
+setup.sh FLX_DB_NAME   PROJECT_NAME
+setup.sh FLX_DB_HOST   DB_HOST
+setup.sh FLX_DB_USER   DB_USER
+
+[deploy]
+#bundle install
+
+# deployディレクティブは、デプロイ時のコマンド処理を記述するためのものです。
+# 実行はユーザ権限で行われます。
+# deployディレクティブはすべてのデプロイ時に実行されます。
+# 処理内容を別のシェルスクリプトに記述して、イニシャライザからはシェルスクリプトの実行だけを行う方法もあります。
+# 上記の例では、すべてのデプロイ時にbundle installを行っています。
+
+bash deploy.sh
+
+[setup]
+#rm -rf /tmp/*
+
+# setupディレクティブは、セットアップモードのデプロイ時のみ実行される処理を記述するための場所です。
+# コマンドがそのまま実行されていまうのでお気をつけてください。
+# 上記の例では、tmpの中身を初期化してくれというのがスマートですね。
+
+bash setup.sh
