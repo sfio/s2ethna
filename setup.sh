@@ -1,8 +1,9 @@
 #!/bin/sh
 
-php pyrus.phar mypear ~/src/my-project/pear
-php pyrus.phar install PEAR2_HTTP_Request
-php pyrus.phar list-packages
+php public_html/install/pyrus.phar mypear ~/lib/PEAR
+php public_html/install/pyrus.phar list-packages
+php public_html/install/pyrus.phar install PEAR
+php public_html/install/pyrus.phar list-packages
 
 #pear channel-discover pear.ethna.jp
 #pear update-channels
