@@ -6,7 +6,6 @@
 #コマンドは「Gitリポジトリのルートからのパス」「スペースまたはタブ」「パーミッション」の順番で記述します。
 #上記の例ではpublic_html内のcacheディレクトリを777に、secret.txtを666に変更しています。
 
-.my.cnf       600
 etc/pdo.dicon 600
 
 [replace]
@@ -31,23 +30,13 @@ etc/pdo.dicon 600
 # DB_HOST ... データベースサーバのホスト名です。
 # PROJECT_NAME ... プロジェクト名です。
 
-.my.cnf FLX_DB_PASS DB_PASSWORD
-
 etc/pdo.dicon FLX_DB_NAME PROJECT_NAME
 etc/pdo.dicon FLX_DB_HOST DB_HOST
 etc/pdo.dicon FLX_DB_USER DB_USER
 etc/pdo.dicon FLX_DB_PASS DB_PASSWORD
 
-deploy.sh FLX_DB_NAME PROJECT_NAME
-deploy.sh FLX_DB_HOST DB_HOST
-deploy.sh FLX_DB_USER DB_USER
-
-setup.sh FLX_DB_NAME   PROJECT_NAME
-setup.sh FLX_DB_HOST   DB_HOST
-setup.sh FLX_DB_USER   DB_USER
-
-public_html/install/phpterm.php FLX_DB_USER DB_USER
-public_html/install/phpterm.php FLX_DB_PASS DB_PASSWORD
+bin/phpterm/phpterm.php FLX_DB_USER DB_USER
+bin/phpterm/phpterm.php FLX_DB_PASS DB_PASSWORD
 
 [deploy]
 #bundle install
