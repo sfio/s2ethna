@@ -17,7 +17,7 @@ ini_set('include_path', implode(PATH_SEPARATOR, array($app, $lib, "{$lib}/PEAR")
 
 
 /** アプリケーションライブラリのインクルード */
-require_once 'Ethna/Ethna.php';
+require_once 'ethna/Ethna.php';
 require_once 'S2ethna_Error.php';
 require_once 'S2ethna_ActionClass.php';
 require_once 'S2ethna_ActionForm.php';

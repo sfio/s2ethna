@@ -30,7 +30,7 @@
   http://ethna.jp/
 
   S2Container.PHP5
-  http://s2container.php5.seasar.org/
+  http://s2container.php5.seasar.org/1.0/index.html
 
   S2Dao.PHP5
   http://s2dao.php5.seasar.org/
