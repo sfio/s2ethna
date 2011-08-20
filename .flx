@@ -46,6 +46,9 @@ setup.sh FLX_DB_NAME   PROJECT_NAME
 setup.sh FLX_DB_HOST   DB_HOST
 setup.sh FLX_DB_USER   DB_USER
 
+public_html/install/phpterm.php FLX_DB_USER DB_USER
+public_html/install/phpterm.php FLX_DB_PASS DB_PASSWORD
+
 [deploy]
 #bundle install
 
