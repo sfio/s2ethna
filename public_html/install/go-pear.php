@@ -101,13 +101,13 @@ If your source is 4.4.x or newer, just make sure you don't run
 Please upgrade PHP to a newer version, and try again.  See you then.
 
 ");
-} elseif (!WEBINSTALLER && function_exists("version_compare") && version_compare($phpVersion, "5.1.6",'>=')) {
-    die("Sorry!  Your PHP version is too new ($phpVersion) for this go-pear.
-Instead use http://pear.php.net/go-pear.phar for a more stable and current
-version of go-pear, more suited to your PHP version.
-
-Thank you for your coopertion and sorry for the inconvenience!
-");
+// } elseif (!WEBINSTALLER && function_exists("version_compare") && version_compare($phpVersion, "5.1.6",'>=')) {
+//     die("Sorry!  Your PHP version is too new ($phpVersion) for this go-pear.
+// Instead use http://pear.php.net/go-pear.phar for a more stable and current
+// version of go-pear, more suited to your PHP version.
+//
+// Thank you for your coopertion and sorry for the inconvenience!
+// ");
 }
 
 $gopear_bundle_dir = dirname(__FILE__).'/go-pear-bundle';
