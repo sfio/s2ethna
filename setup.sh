@@ -1,7 +1,6 @@
 #!/bin/sh
 
 #public_html/install/go-pear.phar list-packages
-
 #pear channel-discover pear.ethna.jp
 #pear update-channels
 #pear install -a ethna/ethna
