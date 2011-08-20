@@ -262,11 +262,11 @@ if (WEBINSTALLER) {
 }
 
 if (!WEBINSTALLER) {
-    $tty = WINDOWS ? @fopen('\con', 'r') : @fopen('/dev/tty', 'r');
+//     $tty = WINDOWS ? @fopen('\con', 'r') : @fopen('/dev/tty', 'r');
 
-    if (!$tty) {
+//     if (!$tty) {
         $tty = fopen('php://stdin', 'r');
-    }
+//     }
 
     $local = isset($_SERVER['argv'][1]) && $_SERVER['argv'][1] == 'local';
     if ($local) {
